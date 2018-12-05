@@ -1,7 +1,7 @@
 package org.app;
 
 
-import org.app.datamapping.json.outgoing.ProjectionSystemData;
+import org.app.datamapping.json.outgoing.ProjectionSystemResponseBody;
 import org.app.web.ProjectionSystemServlet;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class ProjectionSystemServletTest {
     @Test
     public void testServletWithData() throws Exception {
         //given
-        List<ProjectionSystemData> testData = prepareData();
+        List<ProjectionSystemResponseBody> testData = prepareData();
 
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -43,7 +43,7 @@ public class ProjectionSystemServletTest {
     @Test
     public void testServletEmptyData() throws Exception {
         //given
-        List<ProjectionSystemData> testData = new ArrayList<>();
+        List<ProjectionSystemResponseBody> testData = new ArrayList<>();
 
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -63,13 +63,13 @@ public class ProjectionSystemServletTest {
         assertTrue(stringWriter.toString().contains("{response: []}"));
     }
 
-    private List<ProjectionSystemData> prepareData() {
-        List<ProjectionSystemData> preparedData = new ArrayList<>();
-        ProjectionSystemData projectionSystemData1 = new ProjectionSystemData();
+    private List<ProjectionSystemResponseBody> prepareData() {
+        List<ProjectionSystemResponseBody> preparedData = new ArrayList<>();
+        ProjectionSystemResponseBody projectionSystemData1 = new ProjectionSystemResponseBody();
         projectionSystemData1.setName("some name");
         projectionSystemData1.setUid("some uid");
 
-        ProjectionSystemData projectionSystemData2 = new ProjectionSystemData();
+        ProjectionSystemResponseBody projectionSystemData2 = new ProjectionSystemResponseBody();
         projectionSystemData2.setName("some name 2");
         projectionSystemData2.setUid("some uid 2");
 

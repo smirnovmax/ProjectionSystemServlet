@@ -1,7 +1,7 @@
 package org.app.datamapping.json.translation;
 
 
-import org.app.datamapping.json.outgoing.ProjectionSystemData;
+import org.app.datamapping.json.outgoing.ProjectionSystemResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Collects certain data from xml files and allows to fill specific entity
+ */
 public class DataManager {
 
     private static final Logger log = LoggerFactory.getLogger(DataManager.class);
@@ -31,10 +34,10 @@ public class DataManager {
     private static final String XML_TAG_IOBJECT = "IObject";
 
     /**
-     * method get path from environment variable
+     * Method get path from environment variable
      * @return - all data from all subdirectories
      */
-    public List<ProjectionSystemData> extractData() {
+    public List<ProjectionSystemResponseBody> extractData() {
         try {
             String environmentVar = System.getenv(XML_PATH_ENVIRONMENT_VARIABLE_NAME);
             return readAllData(environmentVar);
@@ -45,12 +48,13 @@ public class DataManager {
     }
 
     /**
-     * search files in subdirectories
+     * Search files in subdirectories
+     * TODO: using some dependences with third-party libraries or java 8 we can easily do without recursive research of subdirectories
      * @param path - folder path
      * @return - all data with xml tag IObject
      */
-    private List<ProjectionSystemData> readAllData(String path) {
-        List<ProjectionSystemData> allData = new ArrayList<>();
+    private List<ProjectionSystemResponseBody> readAllData(String path) {
+        List<ProjectionSystemResponseBody> allData = new ArrayList<>();
         try {
             File folder = new File(path);
             File[] listOfFiles = folder.listFiles();
@@ -70,12 +74,12 @@ public class DataManager {
     }
 
     /**
-     *
+     * Method allows to collect data for attributes from a specific xml tag
      * @param path - file path
      * @return - data with xml tag IObject
      */
-    private List<ProjectionSystemData> readDataFromXml(String path) {
-        List<ProjectionSystemData> resultData = new ArrayList<>();
+    private List<ProjectionSystemResponseBody> readDataFromXml(String path) {
+        List<ProjectionSystemResponseBody> resultData = new ArrayList<>();
         try {
             File file = new File(path);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
@@ -91,7 +95,7 @@ public class DataManager {
                         nNode.getParentNode().getNodeName().equals(XML_TAG_ENUM_ENUM)) {
                     log.warn("Wrong node type or Parent name not equals {} ", XML_TAG_ENUM_ENUM);
                     Element eElement = (Element) nNode;
-                    ProjectionSystemData dataItem = new ProjectionSystemData(eElement.getAttribute(XML_TAG_UID),
+                    ProjectionSystemResponseBody dataItem = new ProjectionSystemResponseBody(eElement.getAttribute(XML_TAG_UID),
                             eElement.getAttribute(XML_TAG_NAME));
                     resultData.add(dataItem);
                 }
