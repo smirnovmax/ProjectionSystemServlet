@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "response": {
+    "type": "array",
+    "items": {
+      "uis": "string",
+      "name": "string"
+    },
+    "minItems": 0,
+    "uniqueItems": false
+  }
+}

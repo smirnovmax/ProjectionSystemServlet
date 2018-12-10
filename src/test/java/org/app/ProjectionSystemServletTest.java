@@ -1,10 +1,11 @@
 package org.app;
 
 
+import com.github.fge.jsonschema.main.JsonSchema;
+import org.apache.openjpa.persistence.validation.ValidationUtils;
 import org.app.datamapping.json.outgoing.ProjectionSystemResponseBody;
 import org.app.web.ProjectionSystemServlet;
 import org.junit.Test;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -19,6 +20,7 @@ public class ProjectionSystemServletTest {
 
     @Test
     public void testServletWithData() throws Exception {
+
         //given
         List<ProjectionSystemResponseBody> testData = prepareData();
 
@@ -37,7 +39,7 @@ public class ProjectionSystemServletTest {
 
         writer.flush();
         //then
-        assertTrue(stringWriter.toString().contains("{response: [{uid: some uid,name: some name},{uid: some uid 2,name: some name 2}]}"));
+        assertTrue(stringWriter.toString().contains("{\"response\":[{\"uid\":\"some name\",\"name\":\"some uid\"},{\"uid\":\"some name 2\",\"name\":\"some uid 2\"}]}"));
     }
 
     @Test
@@ -60,18 +62,14 @@ public class ProjectionSystemServletTest {
 
         writer.flush();
         //then
-        assertTrue(stringWriter.toString().contains("{response: []}"));
+        assertTrue(stringWriter.toString().contains("{\"response\":[]}"));
     }
 
     private List<ProjectionSystemResponseBody> prepareData() {
         List<ProjectionSystemResponseBody> preparedData = new ArrayList<>();
-        ProjectionSystemResponseBody projectionSystemData1 = new ProjectionSystemResponseBody();
-        projectionSystemData1.setName("some name");
-        projectionSystemData1.setUid("some uid");
+        ProjectionSystemResponseBody projectionSystemData1 = new ProjectionSystemResponseBody("some name", "some uid");
 
-        ProjectionSystemResponseBody projectionSystemData2 = new ProjectionSystemResponseBody();
-        projectionSystemData2.setName("some name 2");
-        projectionSystemData2.setUid("some uid 2");
+        ProjectionSystemResponseBody projectionSystemData2 = new ProjectionSystemResponseBody("some name 2", "some uid 2");
 
         preparedData.add(projectionSystemData1);
         preparedData.add(projectionSystemData2);
