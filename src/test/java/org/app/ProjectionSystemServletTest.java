@@ -1,13 +1,15 @@
 package org.app;
 
 
-import com.github.fge.jsonschema.main.JsonSchema;
-import org.apache.openjpa.persistence.validation.ValidationUtils;
 import org.app.datamapping.json.outgoing.ProjectionSystemResponseBody;
 import org.app.web.ProjectionSystemServlet;
+import org.junit.Before;
 import org.junit.Test;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -17,6 +19,14 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ProjectionSystemServletTest {
+
+    private String path;
+
+    @Before
+    public void setUp() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        path = new File(classLoader.getResource("schema.json").getFile()).getCanonicalPath();
+    }
 
     @Test
     public void testServletWithData() throws Exception {
@@ -39,7 +49,7 @@ public class ProjectionSystemServletTest {
 
         writer.flush();
         //then
-        assertTrue(stringWriter.toString().contains("{\"response\":[{\"uid\":\"some name\",\"name\":\"some uid\"},{\"uid\":\"some name 2\",\"name\":\"some uid 2\"}]}"));
+        assertTrue(ValidationUtils.isJsonValid(readJsonSchema(path), stringWriter.toString()));
     }
 
     @Test
@@ -62,7 +72,7 @@ public class ProjectionSystemServletTest {
 
         writer.flush();
         //then
-        assertTrue(stringWriter.toString().contains("{\"response\":[]}"));
+        assertTrue(ValidationUtils.isJsonValid(readJsonSchema(path), stringWriter.toString()));
     }
 
     private List<ProjectionSystemResponseBody> prepareData() {
@@ -74,5 +84,21 @@ public class ProjectionSystemServletTest {
         preparedData.add(projectionSystemData1);
         preparedData.add(projectionSystemData2);
         return preparedData;
+    }
+
+    private String readJsonSchema(String fileName) throws Exception {
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line = null;
+        String ls = System.getProperty("line.separator");
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+            stringBuilder.append(ls);
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        reader.close();
+
+        String content = stringBuilder.toString();
+        return content;
     }
 }

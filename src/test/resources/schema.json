@@ -3,7 +3,7 @@
   "response": {
     "type": "array",
     "items": {
-      "uis": "string",
+      "uid": "string",
       "name": "string"
     },
     "minItems": 0,
